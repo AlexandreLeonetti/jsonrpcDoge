@@ -25,14 +25,29 @@ const app = express()
 
 app.get('/', (req, res) => {
 
-(async () => {
+/*(async () => {
         const response = await axios.post("http://127.0.0.1:22555", payload,head)
         console.log(response.data)
     })();
+*/
+
+const main = async function getInfo() {
+        const response = await axios.post("http://127.0.0.1:22555", payload,head)
+        return response.data;
+}
 
 
+    main()
+    .then((v)=>{
+        res.send(v)
+    })
+    .catch((err) => {
+              //!err.logged && console.error(err);
+              console.log(err);
+              res.status(500).send();
+    });
 
-      res.send('Hello World!')
+//    res.send('Hello World!')
 })
 
 app.listen(port, () => {
