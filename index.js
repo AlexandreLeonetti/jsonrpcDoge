@@ -20,14 +20,18 @@ var headers = {
 var auth ={ username: "a", password: "b"   }
 
 var head = { "headers" : headers, "auth" : auth};
-(async () => {
-        const response = await axios.post("http://127.0.0.1:22555", payload,head)
-        console.log(response.data)
-    })();
 const app = express()
 
 
 app.get('/', (req, res) => {
+
+(async () => {
+        const response = await axios.post("http://127.0.0.1:22555", payload,head)
+        console.log(response.data)
+    })();
+
+
+
       res.send('Hello World!')
 })
 
