@@ -1,7 +1,10 @@
 const express = require("express");
 const axios = require("axios");
 axios.defaults.baseURL = 'http://localhost:3000';
+const cors = require('cors')
+const corsOptions = require('./config/corsOptions')
 const port = 3000
+
 
 
 const payload = {
@@ -21,6 +24,11 @@ var auth ={ username: "a", password: "b"   }
 
 var head = { "headers" : headers, "auth" : auth};
 const app = express()
+
+
+app.use(cors());
+app.get('/pages',(req,res)=>{res.sendFile("./pages/index.html", {root:__dirname})});
+app.post('/console',(req,res)=>{console.log("console called")});
 
 
 app.get('/', (req, res) => {
