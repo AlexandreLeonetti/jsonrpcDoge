@@ -28,10 +28,10 @@ const app = express()
 
 app.use(cors());
 app.get('/pages',(req,res)=>{res.sendFile("./pages/index.html", {root:__dirname})});
-app.post('/console',(req,res)=>{console.log("console called")});
+//app.get('/console',(req,res)=>{res.status(200).send("console called")});
 
 
-app.get('/', (req, res) => {
+app.get('/console', (req, res) => {
 
 /*(async () => {
         const response = await axios.post("http://127.0.0.1:22555", payload,head)
@@ -39,21 +39,21 @@ app.get('/', (req, res) => {
     })();
 */
 
-const main = async function getInfo() {
-        const response = await axios.post("http://127.0.0.1:22555", payload,head)
-        return response.data;
-}
+        const main = async function getInfo() {
+                     const response = await axios.post("http://127.0.0.1:22555", payload,head)
+                    return response.data;
+        }
 
 
-    main()
-    .then((v)=>{
-        res.send(v)
-    })
-    .catch((err) => {
+        main()
+        .then((v)=>{
+             res.status(200).send(v)
+        })
+        .catch((err) => {
               //!err.logged && console.error(err);
               console.log(err);
               res.status(500).send();
-    });
+        });
 
 //    res.send('Hello World!')
 })
