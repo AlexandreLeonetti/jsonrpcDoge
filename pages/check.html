@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <input id="posting" value="click me" type="button">        hello page. </input>
+<script>
+    document.getElementById("posting").onclick = function(){
+        var xhr = new XMLHttpRequest();
+          xhr.open("GET", "http://localhost:3000/blockchain", true);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.send(JSON.stringify({
+                value:0 
+          }));
+              xhr.onreadystatechange = () => {
+                          if (xhr.readyState === 4) {
+                                        console.log(xhr.response);
+                          }
+              };
+        }
+</script>
+    </body>
+</html>

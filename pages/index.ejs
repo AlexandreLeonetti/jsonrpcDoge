@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+          <meta charset="UTF-8">
+            <title>Sample Site</title>
+            <link href="./pages/output.css" rel="stylesheet">
+    </head>
+    <body class=" ">
+        <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+          <div class="grid mt-20 content-center">
+                <h1 class="text-6xl text-slate-800 text-center font-bold " > DogePay </h1>
+                 <div class="grid sm:w-full place-content-center" >
+                        <div class="ml-auto mr-auto xl:w-1/2  mt-8 "  id="qrcode-2"></div>
+                         <script type="text/javascript">
+                            var strAddr =" <%= hello.addr %>" ;
+                                strAddr = strAddr.toString();
+                            var qrcode = new QRCode(document.getElementById("qrcode-2"), {
+                                              text: strAddr,
+                                              width:700,
+                                              height:700,
+                                                colorDark : "#000000",
+                                                colorLight : "#ffffff",
+                                                correctLevel : QRCode.CorrectLevel.H
+                                          });
+                         </script>
+                         <p class="ml-auto mr-auto text-4xl xl:text-sm mt-20">Send Doge by scanning the QR Code.</p>
+                         <p class="ml-auto mr-auto text-4xl  xl:text-sm mt-10 "><%= hello.addr   %></p>
+                 </div>
+
+          </div>
+                                      
+    </body>
+</html>

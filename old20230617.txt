@@ -4,10 +4,6 @@ axios.defaults.baseURL = 'http://localhost:3000';
 const cors = require('cors')
 const corsOptions = require('./config/corsOptions')
 const port = 3000
-const dogecore = require("bitcore-lib-doge");
-const { PrivateKey, PublicKey, Address, Transaction, Script, Opcode } = dogecore
-const { Hash, Signature } = dogecore.crypto
-const path = require("path")
 
 //http request
 //headers, auth, body
@@ -59,36 +55,6 @@ app.get('/blockchain', (req, res) => { //GET check blockchain for balance or inf
 
 
 //PAYMENT PAGE REQUESTS
-const generatePair = () => {
-        /*generate a random private key*/
-        var priv = PrivateKey();
-
-        /*get the associated address*/
-        var addr = priv.toAddress();
-
-        /*export private key to WIF format.*/
-        var exportedPriv  =  priv.toWIF();
-        console.log(exportedPriv);
-        /*export address to human format (string);*/
-        var humanAddr = addr.toString();
-        console.log(humanAddr);
-
-        return {"priv" : exportedPriv , "addr" : humanAddr}
-}
-
-//set view engine to ejs mode
-app.set('view engine', 'ejs');
-app.engine('ejs', require('ejs').__express);
-
-app.get('/', function(req, res) {
-       var addressDoge = generatePair();
-       res.render(path.join(__dirname, '/pages/index'),{
-                                                               hello:addressDoge});
-});
-
-app.get('/pages/output.css', function(req,res){
-        res.sendFile(path.join(__dirname, '/pages/output.css'));
-});
 
 
 // SERVER IS LISTENNING
