@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <input id="posting" value="click me" type="button">        hello page. </input>
+        <input id="posting" value="check balance" type="button">        hello page. </input>
+        <br></br>
+        <div id="content"> </div>
 <script>
     document.getElementById("posting").onclick = function(){
         var xhr = new XMLHttpRequest();
@@ -13,6 +15,7 @@
               xhr.onreadystatechange = () => {
                           if (xhr.readyState === 4) {
                                         console.log(xhr.response);
+                                        document.getElementById("content").innerHTML= xhr.response;
                           }
               };
         }

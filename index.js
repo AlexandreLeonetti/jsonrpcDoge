@@ -15,8 +15,9 @@ const path = require("path")
 const data = {
             jsonrpc: "1.0",
             id: 0,
-            method: "getblockchaininfo",
-            params: []    
+//            method: "getblockchaininfo",
+            method:"getreceivedbyaddress",
+            params: [ "DTuCyS86HPG8aJGhyUMavLNmnEYAysjvEp"]    
 };
 
 const config ={ 
@@ -38,7 +39,7 @@ app.use(cors());
 
 //BLOCKCHAIN REQUESTS
 
-app.get('/pages',(req,res)=>{res.sendFile("./pages/index.html", {root:__dirname})});
+app.get('/pages',(req,res)=>{res.sendFile("./pages/check.html", {root:__dirname})});
 
 app.get('/blockchain', (req, res) => { //GET check blockchain for balance or info.
 
@@ -68,11 +69,9 @@ const generatePair = () => {
 
         /*export private key to WIF format.*/
         var exportedPriv  =  priv.toWIF();
-        console.log(exportedPriv);
         /*export address to human format (string);*/
         var humanAddr = addr.toString();
-        console.log(humanAddr);
-
+            humanAddr = "DTuCyS86HPG8aJGhyUMavLNmnEYAysjvEp";
         return {"priv" : exportedPriv , "addr" : humanAddr}
 }
 
@@ -89,6 +88,12 @@ app.get('/', function(req, res) {
 app.get('/pages/output.css', function(req,res){
         res.sendFile(path.join(__dirname, '/pages/output.css'));
 });
+/*
+ * build single thread payment system first
+ * save current public address i global scope variable.
+ * check the balance of this address on the check blockchain page.
+ */
+
 
 
 // SERVER IS LISTENNING
