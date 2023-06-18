@@ -9,57 +9,15 @@ const { PrivateKey, PublicKey, Address, Transaction, Script, Opcode } = dogecore
 const { Hash, Signature } = dogecore.crypto
 const path = require("path")
 
-//http request
-//headers, auth, body
-//refactor axios request object into a single code object.
-const data = {
-            jsonrpc: "1.0",
-            id: 0,
-//            method: "getblockchaininfo",
-            method:"getreceivedbyaddress",
-            params: [ "DTuCyS86HPG8aJGhyUMavLNmnEYAysjvEp"]    
-};
-
-const config ={ 
-             "headers" :{
-                            'User-Agent':'Super Agent/0.0.1',
-                            'Content-Type':'application/json-rpc',
-                            'Accept':'application/json-rpc'
-             }, 
-             "auth" :{ 
-                 username: "a", 
-                 password: "b"   
-             }
-};
 //***************************************
 //express app is initialised
 const app = express()
 app.use(cors());
 
 
-//BLOCKCHAIN REQUESTS
-
-app.get('/pages',(req,res)=>{res.sendFile("./pages/check.html", {root:__dirname})});
-
-app.get('/blockchain', (req, res) => { //GET check blockchain for balance or info.
-
-        const main = async function getInfo() {
-                    const response = await axios.post("http://127.0.0.1:22555", data, config)
-                    return response.data;
-        }
-        
-        main()
-        .then((dat)=>{
-             res.status(200).send(dat)
-        })
-        .catch((err) => {
-              console.log(err);
-              res.status(500).send();
-        });
-}) //blockchain
-
-
-//PAYMENT PAGE REQUESTS
+/*
+ *function that generate a key pair. 
+ */
 const generatePair = () => {
         /*generate a random private key*/
         var priv = PrivateKey();
@@ -69,25 +27,59 @@ const generatePair = () => {
 
         /*export private key to WIF format.*/
         var exportedPriv  =  priv.toWIF();
+        console.log(exportedPriv);
         /*export address to human format (string);*/
         var humanAddr = addr.toString();
-            humanAddr = "DTuCyS86HPG8aJGhyUMavLNmnEYAysjvEp";
+        console.log(humanAddr);
+
         return {"priv" : exportedPriv , "addr" : humanAddr}
 }
 
+/*
+ * the function generatePair is called in the globalscope here, called only once, per server instance.
+ */
+var globalDogeAddress = generatePair();
+
+/* this function calls dogechain.info to check the balance of the current keypair public address*/
+const balanceInquiryDogechain = async function getInfo(){
+    const response = await axios.get(`https://dogechain.info/api/v1/address/balance/${globalDogeAddress.addr}`, { headers: {'user-agent':"axios"}});
+    return response.data;
+}
+
+//BLOCKCHAIN REQUESTS
+
+app.get('/blockchainbalance', (req, res) => { //GET check blockchain for balance from dogechain.info.
+        balanceInquiryDogechain()
+        .then((dat)=>{
+             res.status(200).send(dat)
+        })
+        .catch((err) => {
+              console.log(err);
+              res.status(500).send();
+        });
+
+}) //blockchain
+
+
+//PAYMENT PAGE REQUESTS
 //set view engine to ejs mode
 app.set('view engine', 'ejs');
 app.engine('ejs', require('ejs').__express);
 
 app.get('/', function(req, res) {
-       var addressDoge = generatePair();
-       res.render(path.join(__dirname, '/pages/index'),{
-                                                               hello:addressDoge});
+       res.render(path.join(__dirname, '/pages/index'),
+           {
+                paymentAddress:globalDogeAddress.addr
+           });
 });
 
+
+// GET css files
 app.get('/pages/output.css', function(req,res){
         res.sendFile(path.join(__dirname, '/pages/output.css'));
 });
+
+
 /*
  * build single thread payment system first
  * save current public address i global scope variable.
@@ -107,57 +99,5 @@ app.listen(port, () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-axios({
-      method: 'post',
-      url: 'http://127.0.0.1:22555',
-        data: {
-              jsonrpc : '1.0',
-              id : 'curltest',
-              medthod : "getblockchaininfo",
-              params : []
-            },
-    
-      auth:auth,
-      headers : headers,
-
-
-    
-})
-.then(
-    (response) => { console.log(response)},
-    (error)    => { console.log(error)}
-
-);
-
-*/
-
-
-
-/*(async () => {
-        const response = await axios.post("http://127.0.0.1:22555", payload,head)
-        console.log(response.data)
-    })();
-*/
 
 

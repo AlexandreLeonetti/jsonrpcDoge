@@ -8,11 +8,11 @@
     <body class=" ">
         <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
           <div class="grid mt-20 content-center">
-                <h1 class="text-6xl text-slate-800 text-center font-bold " > DogePay </h1>
+                <h1 class="paid text-6xl text-slate-800 text-center font-bold " > DogePay </h1>
                  <div class=" paid grid sm:w-full place-content-center" >
                         <div class="paid ml-auto mr-auto xl:w-1/2  mt-8 "  id="qrcode-2"></div>
                          <script type="text/javascript">
-                            var strAddr =" <%= hello.addr %>" ;
+                            var strAddr =" <%= paymentAddress%>" ;
                                 strAddr = strAddr.toString();
                             var qrcode = new QRCode(document.getElementById("qrcode-2"), {
                                               text: strAddr,
@@ -24,10 +24,10 @@
                                           });
                          </script>
                          <p id="sendDoge" class="paid ml-auto mr-auto text-4xl xl:text-sm mt-20">Send Doge by scanning the QR Code.</p>
-                         <p id="address" class="paid ml-auto mr-auto text-4xl  xl:text-sm mt-10 "><%= hello.addr   %></p>
-                         <h1 id="paymentReceived" class="text-6xl text-slate-800 text-center font-bold"></h1>
+                         <p id="address" class="paid ml-auto mr-auto text-4xl  xl:text-sm mt-10 "><%= paymentAddress%></p>
                  </div>
                  <br>
+                         <h1 id="paymentReceived" class="text-6xl text-slate-800 text-center font-bold"></h1>
                  <br>
                  <!--<button id="posting" value="check balance" class="text-center font-bold text-4xl" type="button"> check balance</button>-->
                                      
@@ -40,7 +40,7 @@
 
     function checkOnce (){
         var xhr = new XMLHttpRequest();
-          xhr.open("GET", "http://localhost:3000/blockchain", true);
+          xhr.open("GET", "http://localhost:3000/blockchainbalance", true);
           xhr.setRequestHeader('Content-Type', 'application/json');
           xhr.send(JSON.stringify({
                 value:0 
@@ -49,19 +49,27 @@
                           if (xhr.readyState === 4) {
                                         console.log(xhr.response);
                                         var balanceObj = JSON.parse(xhr.response);
-                                        var balance = balanceObj.result;
+                                        var balance = balanceObj.balance;
+                                  console.log(balance);
+                                        if(balance>0){
+
                                         document.getElementById("content").innerHTML= balance;
                                         document.getElementById("paymentReceived").innerHTML = "Payment received !";
                                         document.getElementsByClassName("paid")[0].style.display="none";
                                         document.getElementsByClassName("paid")[1].style.display="none";
                                         document.getElementsByClassName("paid")[2].style.display="none";
-                                  console.log( document.getElementsByClassName("paid"));
+                                               console.log(balance);
+                                                clearInterval(checker);
+                                            }else{ console.log("payment not received yet, balance is ");
+                                              console.log(balance);
+                                            }
+
                           }
               };
         }
 
-
-    const checker = setInterval( checkOnce, 5000);
+    let counter  = 0;
+    const checker = setInterval( checkOnce, 120000);
 </script>
 
     </body>
