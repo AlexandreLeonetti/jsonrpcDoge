@@ -9,8 +9,8 @@
         <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
           <div class="grid mt-20 content-center">
                 <h1 class="text-6xl text-slate-800 text-center font-bold " > DogePay </h1>
-                 <div class="grid sm:w-full place-content-center" >
-                        <div class="ml-auto mr-auto xl:w-1/2  mt-8 "  id="qrcode-2"></div>
+                 <div class=" paid grid sm:w-full place-content-center" >
+                        <div class="paid ml-auto mr-auto xl:w-1/2  mt-8 "  id="qrcode-2"></div>
                          <script type="text/javascript">
                             var strAddr =" <%= hello.addr %>" ;
                                 strAddr = strAddr.toString();
@@ -23,19 +23,22 @@
                                                 correctLevel : QRCode.CorrectLevel.H
                                           });
                          </script>
-                         <p class="ml-auto mr-auto text-4xl xl:text-sm mt-20">Send Doge by scanning the QR Code.</p>
-                         <p class="ml-auto mr-auto text-4xl  xl:text-sm mt-10 "><%= hello.addr   %></p>
+                         <p id="sendDoge" class="paid ml-auto mr-auto text-4xl xl:text-sm mt-20">Send Doge by scanning the QR Code.</p>
+                         <p id="address" class="paid ml-auto mr-auto text-4xl  xl:text-sm mt-10 "><%= hello.addr   %></p>
+                         <h1 id="paymentReceived" class="text-6xl text-slate-800 text-center font-bold"></h1>
                  </div>
                  <br>
                  <br>
-         <button id="posting" value="check balance" class="text-center font-bold text-4xl" type="button"> check balance</button>
+                 <!--<button id="posting" value="check balance" class="text-center font-bold text-4xl" type="button"> check balance</button>-->
                                      
         <div id="content" class="text-center font-bold text-4xl"> </div>
           </div>
                                      
 
 <script>
-    document.getElementById("posting").onclick = function(){
+    /*document.getElementById("posting").onclick = */
+
+    function checkOnce (){
         var xhr = new XMLHttpRequest();
           xhr.open("GET", "http://localhost:3000/blockchain", true);
           xhr.setRequestHeader('Content-Type', 'application/json');
@@ -48,9 +51,17 @@
                                         var balanceObj = JSON.parse(xhr.response);
                                         var balance = balanceObj.result;
                                         document.getElementById("content").innerHTML= balance;
+                                        document.getElementById("paymentReceived").innerHTML = "Payment received !";
+                                        document.getElementsByClassName("paid")[0].style.display="none";
+                                        document.getElementsByClassName("paid")[1].style.display="none";
+                                        document.getElementsByClassName("paid")[2].style.display="none";
+                                  console.log( document.getElementsByClassName("paid"));
                           }
               };
         }
+
+
+    const checker = setInterval( checkOnce, 5000);
 </script>
 
     </body>
